@@ -1,63 +1,107 @@
-interface Civilization<NotablePeopleTypes> {
+interface Activity<AttendeeType> {
   name: string;
   location: string;
-  notablePeople: NotablePeopleTypes[];
+  attendees: AttendeeType[];
 }
 
-interface Person {
+interface Guest {
   name: string;
-  occupation: string;
+  interest: string;
 }
 
-type Architecht = Person & { occupation: "Architect" };
-type Pharaoh = Person & { occupation: "Pharaoh" };
-type Poet = Person & { occupation: "Poet" };
-type Philosopher = Person & { occupation: "Philosopher" };
-type General = Person & { occupation: "General" };
+type Skier = Guest & { interest: "skiing" };
+type SpaEnthusiast = Guest & { interest: "spas" };
+type Foodie = Guest & { interest: "restaurants" };
+type ThrillSeeker = Guest & {
+  interest: "adrenaline sports";
+};
 
-type NotablePeople<PersonType> = PersonType extends Person ? PersonType : never;
+type GuestWithActivity<GuestType> = GuestType extends Guest
+  ? GuestType
+  : never;
 
-const egyptianCivilization: Civilization<Architecht | Pharaoh> = {
-    name: "Egyptian",
-    location: "Africa", 
-    notablePeople: [
+const skiLesson: Activity<
+  GuestWithActivity<Skier | ThrillSeeker>
+> = {
+  name: "Steeps Clinic",
+  location: "Matterhorn Gondola",
+  attendees: [
+    {
+      name: "Jessica Sweet",
+      interest: "skiing"
+    },
+    {
+      name: "Jason Williams",
+      interest: "adrenaline sports"
+    }
+  ]
+};
+
+const cookingClass: Activity<GuestWithActivity<Foodie>> = {
+  name: "Thai Cooking Class",
+  location: "West Kitchen",
+  attendees: [
+    {
+      name: "Leon Vida",
+      interest: "restaurants"
+    }
+  ]
+};
+
+const massage: Activity<GuestWithActivity<SpaEnthusiast>> =
+  {
+    name: "Hot Stone Massage",
+    location: "Lotus Spa Lounge",
+    attendees: [
       {
-        name: "Cleopatra",
-        occupation: "Pharaoh"
-      },
-      {
-        name: "Imhoptep",
-        occupation: "Architect"
+        name: "Jordan James",
+        interest: "spas"
       }
     ]
   };
 
-  const greekCivilalization: Civilization<Poet | Philosopher> = {
-    name: "Greek",
-    location: "Europe",
-    notablePeople: [
-      {
-        name: "Homer",
-        occupation: "Poet"
-      },
-      {
-        name: "Socrates",
-        occupation: "Philosopher"
-      }
-    ]
-      };
+type HotelCategory = "gold" | "silver" | "bronze";
 
-    const romanCivilization: Civilization<General | Poet> = {
-      name: "Roman",
-      location: "Europe",
-      notablePeople: [
-        {
-          name: "Julius Caesar",
-          occupation: "General"
-        },
-        {
-          name: "Virgil",
-          occupation: "Poet"
-        }
-      ]
-        };
+class Hotel {
+  readonly id: string;
+  readonly name: string;
+  cost: number;
+  amenities: string[] = [];
+  category: HotelCategory;
+
+  constructor(
+    id: string,
+    name: string,
+    cost: number,
+    category: HotelCategory
+  ) {
+    this.id = id;
+    this.name = name;
+    this.cost = cost;
+    this.category = category;
+  }
+
+  addAmenity(amenity: string) {
+    this.amenities.push(amenity);
+  }
+  describeHotel(): string {
+    return `The ${this.category} category ${
+      this.name
+    } costs $${
+      this.cost
+    } and includes the following amenities: ${this.amenities.join(
+      ", "
+    )}.`;
+  }
+}
+
+const peakLodge = new Hotel(
+  "06",
+  "Peak Lodge",
+  250,
+  "silver"
+);
+peakLodge.addAmenity("breakfast");
+peakLodge.addAmenity("wifi");
+let description = peakLodge.describeHotel();
+console.log(description);
