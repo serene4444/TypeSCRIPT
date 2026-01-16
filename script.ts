@@ -1,29 +1,63 @@
-class Hotel {
-  readonly id: string;
-  readonly name: string;
-  cost: number;
-  amenities: string[] = [];
-
-  constructor(id: string, name: string, cost: number) {
-    this.id = id;
-    this.name = name;
-    this.cost = cost;
-  }
-
-  addAmenity(amenity: string) {
-    this.amenities.push(amenity);
-  }
-  describeHotel(): string {
-    return `The ${this.name} costs $${
-      this.cost
-    } and includes the following amenities: ${this.amenities.join(
-      ", "
-    )}.`;
-  }
+interface Civilization<NotablePeopleTypes> {
+  name: string;
+  location: string;
+  notablePeople: NotablePeopleTypes[];
 }
 
-const peakLodge = new Hotel("06", "Peak Lodge", 250);
-peakLodge.addAmenity("breakfast");
-peakLodge.addAmenity("wifi");
-let description = peakLodge.describeHotel();
-console.log(description);
+interface Person {
+  name: string;
+  occupation: string;
+}
+
+type Architecht = Person & { occupation: "Architect" };
+type Pharaoh = Person & { occupation: "Pharaoh" };
+type Poet = Person & { occupation: "Poet" };
+type Philosopher = Person & { occupation: "Philosopher" };
+type General = Person & { occupation: "General" };
+
+type NotablePeople<PersonType> = PersonType extends Person ? PersonType : never;
+
+const egyptianCivilization: Civilization<Architecht | Pharaoh> = {
+    name: "Egyptian",
+    location: "Africa", 
+    notablePeople: [
+      {
+        name: "Cleopatra",
+        occupation: "Pharaoh"
+      },
+      {
+        name: "Imhoptep",
+        occupation: "Architect"
+      }
+    ]
+  };
+
+  const greekCivilalization: Civilization<Poet | Philosopher> = {
+    name: "Greek",
+    location: "Europe",
+    notablePeople: [
+      {
+        name: "Homer",
+        occupation: "Poet"
+      },
+      {
+        name: "Socrates",
+        occupation: "Philosopher"
+      }
+    ]
+      };
+
+    const romanCivilization: Civilization<General | Poet> = {
+      name: "Roman",
+      location: "Europe",
+      notablePeople: [
+        {
+          name: "Julius Caesar",
+          occupation: "General"
+        },
+        {
+          name: "Virgil",
+          occupation: "Poet"
+        }
+      ]
+        };
