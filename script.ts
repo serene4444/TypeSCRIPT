@@ -1,73 +1,15 @@
-interface Activity<AttendeeType> {
-  name: string;
-  location: string;
-  attendees: AttendeeType[];
-}
-
-interface Guest {
-  name: string;
-  interest: string;
-}
-
-type Skier = Guest & { interest: "skiing" };
-type SpaEnthusiast = Guest & { interest: "spas" };
-type Foodie = Guest & { interest: "restaurants" };
-type ThrillSeeker = Guest & {
-  interest: "adrenaline sports";
-};
-
-type GuestWithActivity<GuestType> = GuestType extends Guest
-  ? GuestType
-  : never;
-
-const skiLesson: Activity<
-  GuestWithActivity<Skier | ThrillSeeker>
-> = {
-  name: "Steeps Clinic",
-  location: "Matterhorn Gondola",
-  attendees: [
-    {
-      name: "Jessica Sweet",
-      interest: "skiing"
-    },
-    {
-      name: "Jason Williams",
-      interest: "adrenaline sports"
-    }
-  ]
-};
-
-const cookingClass: Activity<GuestWithActivity<Foodie>> = {
-  name: "Thai Cooking Class",
-  location: "West Kitchen",
-  attendees: [
-    {
-      name: "Leon Vida",
-      interest: "restaurants"
-    }
-  ]
-};
-
-const massage: Activity<GuestWithActivity<SpaEnthusiast>> =
-  {
-    name: "Hot Stone Massage",
-    location: "Lotus Spa Lounge",
-    attendees: [
-      {
-        name: "Jordan James",
-        interest: "spas"
-      }
-    ]
-  };
+import { Activity } from "./activities";
+import { Guest } from "./guests";
 
 type HotelCategory = "gold" | "silver" | "bronze";
 
-class Hotel {
+class Hotel<AttendeeType> {
   readonly id: string;
   readonly name: string;
   cost: number;
   amenities: string[] = [];
   category: HotelCategory;
+  activities: Activity<AttendeeType>[] = [];
 
   constructor(
     id: string,
@@ -93,6 +35,9 @@ class Hotel {
       ", "
     )}.`;
   }
+  addActivity(activity: Activity<AttendeeType>) {
+    this.activities.push(activity);
+  }
 }
 
 const peakLodge = new Hotel(
@@ -101,7 +46,17 @@ const peakLodge = new Hotel(
   250,
   "silver"
 );
+
+const hiking: Activity<Guest> = {
+  name: "Eastlake Summit Hike",
+  location: "Eastlake Trailhead",
+  attendees: [
+    { name: "John Wilson", interest: "adrenaline sports" }
+  ]
+};
+
 peakLodge.addAmenity("breakfast");
 peakLodge.addAmenity("wifi");
+peakLodge.addActivity(hiking);
 let description = peakLodge.describeHotel();
 console.log(description);
